@@ -3,7 +3,14 @@
     (replacing the placeholder with your Github name):
     https://api.github.com/users/<your name>
 */
-
+const getCall = axios.get('https://api.github.com/users/Mad-Mal')
+.then(response => {
+  let resData = response
+  let finalData = gitCardMaker(resData)
+  let cardChild = document.querySelector('.cards').appendChild(finalData)
+  return cardChild;
+})
+.catch(error => console.log(error))
 /*
   STEP 2: Inspect and study the data coming back, this is YOUR
     github info! You will need to understand the structure of this
@@ -28,8 +35,22 @@
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const followersArray = ['charlie-may86', 'RockoGilbert', 'AidanJJenkins', 'danimalcrackz', 'tbauer1979'];
 
+function arrayCardMaker(array) {
+  for(let i = 0; i < array.length; i++) {
+    let names = array[i];
+  
+  let getCall2 = axios.get(`https://api.github.com/users/${names}`)
+  .then(response => {
+    let resData = response
+    let finalData = gitCardMaker(resData)
+    let cardChild = document.querySelector('.cards').appendChild(finalData)
+    return cardChild;
+  })
+  .catch(error => console.log(error))}
+}
+console.log(arrayCardMaker(followersArray))
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
     Using DOM methods and properties, create and return the following markup:
@@ -49,6 +70,51 @@ const followersArray = [];
       </div>
     </div>
 */
+
+//step 3 code
+
+function gitCardMaker(object) {
+  let outerCardDiv = document.createElement('div')
+  let cardImg = document.createElement('img')
+  let innerCardDiv = document.createElement('div')
+    let cardHead = document.createElement('h3')
+    let usernameP = document.createElement('p')
+    let locationP = document.createElement('p')
+    let profileP = document.createElement('p')
+      let hrefA = document.createElement('a')
+    let followersP = document.createElement('p')
+    let followingP = document.createElement('p')
+    let bioP = document.createElement('p')
+
+    outerCardDiv.classList.add('card')
+    cardImg.src = `${object.data.avatar_url}`
+    innerCardDiv.classList.add('card-info')
+    cardHead.classList.add('name')
+    usernameP.classList.add('username')
+    hrefA.href = `${object.data.html_url}`
+
+    cardHead.textContent = `${object.data.name}`
+    usernameP.textContent = `${object.data.login}`
+    locationP.textContent = `${object.data.location}`
+    hrefA.textContent = `${object.data.html_url}`
+    followersP.textContent = `${object.data.followers}`
+    followingP.textContent = `${object.data.following}`
+    bioP.textContent = `${object.data.bio}`
+
+    outerCardDiv.appendChild(cardImg)
+    outerCardDiv.appendChild(innerCardDiv)
+    innerCardDiv.appendChild(cardHead)
+    innerCardDiv.appendChild(usernameP)
+    innerCardDiv.appendChild(locationP)
+    innerCardDiv.appendChild(profileP)
+    profileP.appendChild(hrefA)
+    innerCardDiv.appendChild(followersP)
+    innerCardDiv.appendChild(followingP)
+    innerCardDiv.appendChild(bioP)
+
+    return outerCardDiv;
+}
+
 
 /*
   List of LS Instructors Github username's:
